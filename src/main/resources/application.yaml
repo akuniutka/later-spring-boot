@@ -10,3 +10,8 @@ spring:
     url: "jdbc:postgresql://localhost:5433/later"
     username: ${LATER_USER}
     password: ${LATER_PASSWORD}
+logging:
+  level:
+    org.hibernate.sql: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
