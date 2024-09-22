@@ -6,6 +6,6 @@ import lombok.Data;
 public class NewUserDto {
 
     private String firstName;
-    private String lastname;
+    private String lastName;
     private String email;
 }

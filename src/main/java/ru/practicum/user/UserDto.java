@@ -16,6 +16,6 @@ public class UserDto {
     private String email;
     private String state;
 
-    @JsonFormat(pattern = "yyyy-MM-dd, hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd, HH:mm:ss", timezone = "UTC")
     private Instant registrationDate;
 }
