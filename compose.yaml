@@ -49,4 +49,11 @@ services:
             item_id BIGINT NOT NULL REFERENCES items (id),
             name VARCHAR(40) NOT NULL
           );
+        
+          CREATE TABLE IF NOT EXISTS item_notes (
+            id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            item_id BIGINT NOT NULL REFERENCES items (id),
+            text VARCHAR(2000),
+            created TIMESTAMP WITH TIME ZONE NOT NULL
+          );
         EOSQL

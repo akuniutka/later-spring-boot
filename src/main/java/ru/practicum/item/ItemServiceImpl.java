@@ -29,6 +29,11 @@ public class ItemServiceImpl implements ItemService {
         return repository.save(item);
     }
 
+    @Override
+    public Item getItem(final long userId, final long id) {
+        return repository.findByUserIdAndId(userId, id).orElseThrow();
+    }
+
     public List<Item> getItems(final long userId) {
         return repository.findByUserId(userId);
     }
