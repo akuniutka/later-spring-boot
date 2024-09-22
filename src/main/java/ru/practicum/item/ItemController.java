@@ -1,5 +1,6 @@
 package ru.practicum.item;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.common.BaseController;
 
 import java.util.List;
 import java.util.Set;
@@ -21,7 +23,7 @@ import java.util.Set;
 @RequestMapping("items")
 @Transactional(readOnly = true)
 @Slf4j
-public class ItemController {
+public class ItemController extends BaseController {
 
     private final ItemService itemService;
     private final ItemMapper mapper;
@@ -30,23 +32,25 @@ public class ItemController {
     @Transactional
     public ItemDto add(
             @RequestHeader("X-Later-User-Id") final long userId,
-            @RequestBody final NewItemDto newItemDto
+            @RequestBody final NewItemDto newItemDto,
+            final HttpServletRequest request
     ) {
-        log.info("Received POST at /items: {} (X-Later-User-Id : {})", newItemDto, userId);
+        logRequest(request, newItemDto);
         final Item item = mapper.mapToItem(newItemDto);
         final ItemDto dto = mapper.mapToDto(itemService.addNewItem(userId, item));
-        log.info("Responded ot POST /items: {}", dto);
+        logResponse(request, dto);
         return dto;
     }
 
     @GetMapping
     public List<ItemDto> get(
             @RequestHeader("X-Later-User-Id") final long userId,
-            @RequestParam(required = false) final Set<String> tags
+            @RequestParam(required = false) final Set<String> tags,
+            final HttpServletRequest request
     ) {
-        log.info("Received GET at /items?tags={} (X-Later-User-Id: {})", tags, userId);
+        logRequest(request);
         final List<ItemDto> dtos = mapper.mapToDto(itemService.getItems(userId, tags));
-        log.info("Responded to GET /items?tags={}: {}", tags, dtos);
+        logResponse(request, dtos);
         return dtos;
     }
 
@@ -54,10 +58,11 @@ public class ItemController {
     @Transactional
     public void deleteItem(
             @RequestHeader("X-Later-User-Id") final long userId,
-            @PathVariable final long itemId
+            @PathVariable final long itemId,
+            final HttpServletRequest request
     ) {
-        log.info("Received DELETE at /items/{} (X-Later-User-Id: {})", itemId, userId);
+        logRequest(request);
         itemService.deleteItem(userId, itemId);
-        log.info("Responded to DELETE /items/{} with no body", itemId);
+        logResponse(request);
     }
 }
