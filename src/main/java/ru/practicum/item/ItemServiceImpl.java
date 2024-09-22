@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.user.User;
+import ru.practicum.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,15 @@ import java.util.Set;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository repository;
+    private final UserService userService;
+
+    @Override
+    @Transactional
+    public Item addNewItem(final long userId, final Item item) {
+        final User user = userService.getUser(userId);
+        item.setUser(user);
+        return repository.save(item);
+    }
 
     public List<Item> getItems(final long userId) {
         return repository.findByUserId(userId);
@@ -27,18 +38,11 @@ public class ItemServiceImpl implements ItemService {
         if (tags == null) {
             return getItems(userId);
         }
-        final BooleanExpression byUserId = QItem.item.userId.eq(userId);
+        final BooleanExpression byUserId = QItem.item.user.id.eq(userId);
         final BooleanExpression byAnyTag = QItem.item.tags.any().in(tags);
         final List<Item> items = new ArrayList<>();
         repository.findAll(byUserId.and(byAnyTag)).forEach(items::add);
         return items;
-    }
-
-    @Override
-    @Transactional
-    public Item addNewItem(final long userId, final Item itam) {
-        itam.setUserId(userId);
-        return repository.save(itam);
     }
 
     @Override
