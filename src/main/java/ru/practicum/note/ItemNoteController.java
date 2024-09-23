@@ -1,4 +1,4 @@
-package ru.practicum.itemnote;
+package ru.practicum.note;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -42,12 +42,36 @@ public class ItemNoteController extends BaseController {
     @GetMapping
     public List<ItemNoteDto> getAll(
             @RequestHeader("X-Later-User-Id") final long userId,
-            @RequestParam(required = false) final String urlPattern,
-            @RequestParam(required = false) final String tag,
+            @RequestParam(defaultValue = "1") final int page,
+            @RequestParam(defaultValue = "10") final int size,
             final HttpServletRequest request
     ) {
         logRequest(request);
-        final List<ItemNoteDto> dtos = mapper.mapToDto(itemNoteService.getItemNotes(userId, urlPattern, tag));
+        final List<ItemNoteDto> dtos = mapper.mapToDto(itemNoteService.getItemNotes(userId, page, size));
+        logResponse(request, dtos);
+        return dtos;
+    }
+
+    @GetMapping(params = "url")
+    public List<ItemNoteDto> searchByUrl(
+            @RequestHeader("X-Later-User-Id") final long userId,
+            @RequestParam final String url,
+            final HttpServletRequest request
+    ) {
+        logRequest(request);
+        final List<ItemNoteDto> dtos = mapper.mapToDto(itemNoteService.searchNotesByUrl(userId, url));
+        logResponse(request, dtos);
+        return dtos;
+    }
+
+    @GetMapping(params = "tag")
+    public List<ItemNoteDto> searchByTag(
+            @RequestHeader("X-Later-User-Id") final long userId,
+            @RequestParam final String tag,
+            final HttpServletRequest request
+    ) {
+        logRequest(request);
+        final List<ItemNoteDto> dtos = mapper.mapToDto(itemNoteService.searchNotesByTag(userId, tag));
         logResponse(request, dtos);
         return dtos;
     }

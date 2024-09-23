@@ -1,4 +1,4 @@
-package ru.practicum.itemnote;
+package ru.practicum.note;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,5 +30,5 @@ public class ItemNote {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    private Instant created = Instant.now();
+    private Instant dateOfNote = Instant.now();
 }

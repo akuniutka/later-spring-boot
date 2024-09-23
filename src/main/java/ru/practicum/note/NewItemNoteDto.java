@@ -1,10 +1,10 @@
-package ru.practicum.itemnote;
+package ru.practicum.note;
 
 import lombok.Data;
 
 @Data
 public class NewItemNoteDto {
 
-    private ItemDto item;
+    private Long itemId;
     private String text;
 }
