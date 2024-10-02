@@ -1,6 +1,7 @@
 package ru.practicum.user;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,7 @@ public class UserController extends BaseController {
 
     @PostMapping
     public UserDto saveNewUser(
-            @RequestBody final NewUserDto newUserDto,
+            @Valid @RequestBody final NewUserDto newUserDto,
             final HttpServletRequest request
     ) {
         logRequest(request, newUserDto);
